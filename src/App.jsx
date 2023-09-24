@@ -1,29 +1,35 @@
 import React, { useState } from "react";
+import "./App.css";
 import FileInput from "./components/FileInput";
 import ImageCropper from "./components/ImageCropper";
 
 function App() {
-  const [image, setImage] = useState("");
-  const [currentPage, setCurrentPage] = useState("choose-img");
-  const [imgAfterCrop, setImgAfterCrop] = useState("");
+  // Define state variables
+  const [image, setImage] = useState(""); 
+  const [currentPage, setCurrentPage] = useState("choose-img"); 
+  const [imgAfterCrop, setImgAfterCrop] = useState(""); 
 
-  // Invoked when new image file is selected
+  // Callback function when an image is selected
   const onImageSelected = (selectedImg) => {
     setImage(selectedImg);
-    setCurrentPage("crop-img");
+    setCurrentPage("crop-img"); 
   };
 
-  // Generating Cropped Image When Done Button Clicked
+  // Callback function when cropping is done
   const onCropDone = (imgCroppedArea) => {
+
+    // Create a canvas element to crop the image
     const canvasEle = document.createElement("canvas");
     canvasEle.width = imgCroppedArea.width;
     canvasEle.height = imgCroppedArea.height;
 
     const context = canvasEle.getContext("2d");
 
+    // Load the selected image
     let imageObj1 = new Image();
     imageObj1.src = image;
     imageObj1.onload = function () {
+      // Draw the cropped portion of the image onto the canvas
       context.drawImage(
         imageObj1,
         imgCroppedArea.x,
@@ -36,6 +42,7 @@ function App() {
         imgCroppedArea.height
       );
 
+      // Convert the canvas content to a data URL (JPEG format)
       const dataURL = canvasEle.toDataURL("image/jpeg");
 
       setImgAfterCrop(dataURL);
@@ -43,16 +50,16 @@ function App() {
     };
   };
 
-  // Handle Cancel Button Click
+  // Callback function when cropping is canceled
   const onCropCancel = () => {
     setCurrentPage("choose-img");
-    setImage("");
+    setImage(""); 
   };
 
   return (
     <div className="container">
       {currentPage === "choose-img" ? (
-        <FileInput setImage={setImage} onImageSelected={onImageSelected} />
+        <FileInput onImageSelected={onImageSelected} />
       ) : currentPage === "crop-img" ? (
         <ImageCropper
           image={image}
@@ -60,6 +67,7 @@ function App() {
           onCropCancel={onCropCancel}
         />
       ) : (
+        // Display the cropped image and options to crop a new image or start over
         <div>
           <div>
             <img src={imgAfterCrop} className="cropped-img" />
@@ -67,7 +75,8 @@ function App() {
 
           <button
             onClick={() => {
-              setCurrentPage("crop-img");
+              // Allow cropping the current image again
+              setCurrentPage("crop-img"); 
             }}
             className="btn"
           >
@@ -76,7 +85,8 @@ function App() {
 
           <button
             onClick={() => {
-              setCurrentPage("choose-img");
+              // Start over by choosing a new image
+              setCurrentPage("choose-img"); 
               setImage("");
             }}
             className="btn"

@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import Cropper from "react-easy-crop";
 
 function ImageCropper({ image, onCropDone, onCropCancel }) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  // Define state variables
+  const [crop, setCrop] = useState({ x: 0, y: 0 }); 
   const [zoom, setZoom] = useState(1);
+  
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(4 / 3);
 
+  // Callback when cropping is completed
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
+    // Store the cropped area in pixels
     setCroppedArea(croppedAreaPixels);
   };
 
+  // Callback when the user changes the aspect ratio
   const onAspectRatioChange = (event) => {
     setAspectRatio(event.target.value);
   };
@@ -18,6 +23,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
   return (
     <div className="cropper">
       <div>
+        {/* Image Cropper component */}
         <Cropper
           image={image}
           aspect={aspectRatio}
@@ -37,6 +43,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
       </div>
 
       <div className="action-btns">
+        {/* Aspect ratio selection */}
         <div className="aspect-ratios" onChange={onAspectRatioChange}>
           <input type="radio" value={1 / 1} name="ratio" /> 1:1
           <input type="radio" value={5 / 4} name="ratio" /> 5:4
@@ -47,18 +54,21 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
           <input type="radio" value={3 / 1} name="ratio" /> 3:1
         </div>
 
-        <button className="btn btn-outline" onClick={onCropCancel}>
-          Cancel
-        </button>
+        {/* Buttons for canceling or applying the crop */}
+        <div className="btn-container">
+          <button className="btn btn-outline" onClick={onCropCancel}>
+            Cancel
+          </button>
 
-        <button
-          className="btn"
-          onClick={() => {
-            onCropDone(croppedArea);
-          }}
-        >
-          Done
-        </button>
+          <button
+            className="btn"
+            onClick={() => {
+              onCropDone(croppedArea);
+            }}
+          >
+            Crop & Apply
+          </button>
+        </div>
       </div>
     </div>
   );
